@@ -1,0 +1,54 @@
+{% extends 'Sistema/base.html' %}
+{% load static %}
+
+{% block navbar %}
+    <p class="text-white px-3 navbar-title"><i class="fas fa-user"></i> Administración - <small class="text-capitalize">Municipio - <small class="text-capitalize">{% block subtitle %}Añadir {% endblock %}</small></small></h1>
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+        <div class="card o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="shadow-lg py-2">
+                    <div class="px-5">
+                        <form class="row g-5 needs-validation" novalidate action="{% url 'municipio_add' %}" method="POST"> {% csrf_token %}
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input id="descripcion" name="{{ form.nombre.name }}" class="form-control" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,350}" maxlength="350" required placeholder="">
+                                    <label for="descripcion" class="control-label">Nombre</label>
+                                    <div class="invalid-tooltip">
+                                      Por favor introduzca un nombre válido
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating position-relative">
+                                    <select class="form-select" id="categoria" required name="{{ form.provincia.name }}">
+                                        <option selected disabled value="">Seleccionar...</option>
+                                        {% for p in provincias  %}
+                                            <option value="{{ p.id }}">{{ p }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="categoria" class="form-label">Provincia *</label>
+                                    <div class="invalid-tooltip">
+                                        Por favor seleccione una categoría
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Añadir &nbsp;<i class="fas fa-save"></i></button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'Sistema/base.html' %}
+{% load static %}
+
+{% block title %}
+    Especialistas
+{% endblock %}
+{% block navbar %}
+    <p class="text-white px-3 navbar-title"><i class="fas fa-user"></i> Usuarios - <small class="text-capitalize">Especialistas - <small class="text-capitalize">{% block subtitle %}Añadir {% endblock %}</small></small></p>
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+        <div class="card o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="shadow-lg py-2">
+                    <div class="px-5">
+                        <form class="row g-5 needs-validation" novalidate action="{% url 'especialista_add' %}" method="POST"> {% csrf_token %}
+                            <div class="col-md-12">
+                                <div class="form-floating position-relative">
+                                    <input id="{{ form.username.label }}" pattern="[a-zñÑ0-9 ]{1,150}" class="form-control" type="text" name="{{ form.username.name }}" required="" maxlength="150" placeholder="">
+                                    <label for="{{ form.username.label }}" class="form-label">{{ form.username.label }}</label>
+                                    <div class="invalid-tooltip">
+                                      El nombre de usuario debe ser en minusculas y sin espacios
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating position-relative">
+                                    <input id="{{ form.password1.label }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,150}" class="form-control" type="password" name="{{ form.password1.name }}" required placeholder="">
+                                    <label for="{{ form.password1.label }}" class="form-label">{{ form.password1.label }} </label>
+                                    <div class="invalid-tooltip">
+                                      {{ form.password1.help_text }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating position-relative">
+                                    <input id="{{ form.password2.label }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,150}" class="form-control" type="password" name="{{ form.password2.name }}" required placeholder="">
+                                    <label for="{{ form.password2.label }}" class="form-label">{{ form.password2.label }}</label>
+                                    <div class="invalid-tooltip">
+                                        {{ form.password2.help_text }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Añadir &nbsp;<i class="fas fa-save"></i></button>
+                            </div>
+				        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+{% endblock %}

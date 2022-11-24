@@ -1,0 +1,39 @@
+{% extends 'Sistema/base.html' %}
+{% load static %}
+
+{% block navbar %}
+    <p class="text-white px-3 navbar-title"><i class="fas fa-user"></i> Administración - <small class="text-capitalize">Provincias - <small class="text-capitalize">{% block subtitle %}Añadir {% endblock %}</small></small></p>
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+        <div class="card o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="shadow-lg py-2">
+                    <div class="px-5">
+                        <form class="row g-5 needs-validation" novalidate action="{% url 'provincia_add' %}" method="POST"> {% csrf_token %}
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input id="descripcion" name="{{ form.nombre.name }}" class="form-control" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,350}" maxlength="350" required placeholder="">
+                                    <label for="descripcion" class="control-label">Nombre</label>
+                                    <div class="invalid-tooltip">
+                                      Por favor introduzca un nombre válido
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Añadir &nbsp;<i class="fas fa-save"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+{% endblock %}

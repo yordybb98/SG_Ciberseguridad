@@ -1,0 +1,310 @@
+{% extends 'Sistema/base.html' %}
+{% load static %}
+
+{% block navbar %}
+    <p class="text-white px-3 navbar-title"><i class="fas fa-user"></i> Perfil - <small class="text-capitalize">Editar Perfil</small></p>
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <div class="shadow-lg">
+                        <div class="px-5">
+                            <div class="row justify-content-center mb-2">
+                                <div class="col-auto">
+                                    <img id="img_avatar" src="{{ formEsp.avatar.value.url }}" class="mx-5 border-2 position-relative" width="150px" height="150px" style="object-fit: cover; border-radius: 100%; border-style: solid">
+                                    <span id="change_avatar" class="image-badge"><i class="fas fa-camera"></i></span>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">¿ Qué necesitas actualizar <strong><i class="text-uppercase">{{ request.user.first_name }}</i></strong>?</h1>
+                            </div>
+                            <hr>
+                            <form enctype="multipart/form-data" class="needs-validation" novalidate method="POST" action="{% url 'act_info' %}">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="{{ form.first_name.id_for_label }}" class="form-label {% if form.first_name.error %}error{% endif %}">{{ form.first_name.label }} <i class=" mx-2 fas fa-user"></i></label>
+                                        <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}" placeholder="{{ form.first_name.label }}" value="{{ form.first_name.value }}" name="{{ form.first_name.name }}">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="{{ form.last_name.label }}" class="form-label">{{ form.last_name.label }} <i class=" mx-2 fas fa-bold "></i></label>
+                                        <input type="text" class="form-control text-capitalize" id="{{ form.last_name.label }}" placeholder="{{ form.last_name.label }}" value="{{ form.last_name.value }}" name="{{ form.last_name.name }}">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="{{ form.username.label }}" class="form-label {% if form.errors %}error{% endif %}">{{ form.username.label }} <i class=" mx-2 fas fa-at"></i></label>
+                                        <input type="text" class="form-control text-lowercase" id="{{ form.username.label }}" placeholder="{{ form.username.label }}" value="{{ form.username.value}}" name="{{ form.username.name }}" required>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="{{ formEsp.fecha_nacimiento.label }}" class="form-label">{{ formEsp.fecha_nacimiento.label }} <i class=" mx-2 fas fa-calendar"></i></label>
+                                        <input type="date" class="form-control" id="{{ formEsp.fecha_nacimiento.label }}" placeholder="{{ formEsp.fecha_nacimiento.label }}" value="{{ request.user.especialista.nacimiento }}" name="{{ formEsp.fecha_nacimiento.name }}" max="2000-12-31">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="Edad" class="form-label">Edad <i class=" mx-2 fas fa-child"></i></label>
+                                        <h6 class="form-control" id="Edad">{% if request.user.especialista.edad == 0  %}Sin Definir{% else %}{{ request.user.especialista.edad }} {% endif %} </h6>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="{{ formEsp.genero.label }}" class="form-label">{{ formEsp.genero.label }} <i class=" mx-2 fas fa-sex"></i></label>
+                                        <select id="{{ formEsp.genero.label }}" class="form-select" name="{{ formEsp.genero.name }}">
+                                            {% for g in generos %}
+                                                <option class="option" {% if g == request.user.especialista.genero  %} selected {% endif %} value="{{ g.id }}" > {{ g }} </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="{{ form.email.label }}" class="form-label">{{ form.email.label }} <i class=" mx-2 fas fa-envelope "></i></label>
+                                        <input type="email" class="form-control text-lowercase" id="{{ form.email.label }}" placeholder="{{ form.email.label }}" value="{{ form.email.value }}" name="{{ form.email.name }}">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="{{ formEsp.direccion.label }}" class="form-label">{{ formEsp.direccion.label }} <i class=" mx-2 fas fa-address-card"></i></label>
+                                        <input type="text" class="form-control" id="{{ formEsp.direccion.label }}" placeholder="Calle ... " value="{% if request.user.especialista.has_direccion %}{{ request.user.especialista.direccion }}{% endif %}" name="{{ formEsp.direccion.name }}">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="{{ formEsp.municipio.label }}" class="form-label">{{ formEsp.municipio.label }} <i class=" mx-2 fas fa-building"></i></label>
+                                        <select id="{{ formEsp.municipio.label }}" class="form-select" name="{{ formEsp.municipio.name }}" value="default">
+                                            {% for p in provincias %}
+                                                <option value="default" hidden>Escoja un Municipio</option>
+                                                <optgroup label="{{ p }}">
+                                                    {% for m in municipios %}
+                                                        {% if m.provincia == p %}
+                                                            <option class="option {{ m.provincia }}" {% if m == request.user.especialista.municipio %} selected {% endif %} value="{{ m.id }}" > {{ m }} </option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </optgroup>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="Provincia" class="form-label"> Provincia <i class=" mx-2 fas fa-university"></i></label>
+                                        <h6 id="Provincia" class="form-control">{% if request.user.especialista.has_municipio %}{{ request.user.especialista.municipio.provincia }} {% else %} Sin Provincia Aún {% endif %}</h6>
+                                    </div>
+
+                                    <div class="col-md-6 row" >
+                                        <div class="col-md-6">
+                                            <label for="{{ formEsp.telefono.label }}" class="form-label">{{ formEsp.telefono.label }} <i class=" mx-2 fas fa-envelope "></i></label>
+                                            <input type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" maxlength="12" class="form-control text-lowercase" id="{{ formEsp.telefono.label }}" placeholder="xxx-xx-xxx" value="{% if request.user.especialista.has_telefono %}{{ request.user.especialista.telefono }}{% endif %}" name="{{ formEsp.telefono.name }}">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="{{ formEsp.ci.label }}" class="form-label">{{ formEsp.ci.label }} <i class=" mx-2 fas fa-envelope "></i></label>
+                                            <input type="tel" pattern="[0-9]{11}" maxlength="11" class="form-control text-lowercase" id="{{ formEsp.ci.label }}" placeholder="XXXXXXXXXXX" value="{% if request.user.especialista.has_ci %}{{ formEsp.ci.value }}{% endif %}" name="{{ formEsp.ci.name }}">
+                                        </div>
+
+                                        <div class="col-md-6 mt-3">
+                                            <label class="form-label px-2" style="font-size: 20px">Listado de Conocimientos</label>
+                                            <a class="position-absolute mt-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#CanvasConocimientos" aria-controls="offcanvasWithBackdrop"><i class="fas fa-plus plus"></i></a>
+
+                                            <div id="listaconocimientos">
+                                                {% for c in request.user.especialista.conocimientos.all  %}
+                                                    <div id="conocimiento{{ forloop.counter0 }}" class="form-check my-2">
+                                                        <input class="form-check-input" type="checkbox" value="{{ c.id }}" id="ConocimientoCheck{{ forloop.counter }}" validate_centro='True' name="{{ formEsp.conocimientos.name }}" checked>
+                                                        <label class="form-check-label" for="ConocimientoCheck{{ forloop.counter }}" >
+                                                            {{ c }}: {{ c.descripcion }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6 mt-3">
+                                            <label class="form-label px-2" style="font-size: 20px">Listado de Habilidades</label>
+                                            <a style="border-style: none" type="button" data-bs-toggle="offcanvas" data-bs-target="#CanvasHabilidades" aria-controls="offcanvasWithBackdrop"><i class="fas fa-plus plus"></i></a>
+
+                                            <div id="listahabilidades">
+                                                {% for h in request.user.especialista.habilidades.all  %}
+                                                    <div id="habilidad{{ forloop.counter0 }}" class="form-check my-2">
+                                                        <input class="form-check-input" type="checkbox" value="{{ h.id }}" id="HabilidadCheck{{ forloop.counter }}" validate_centro='True' name="{{ formEsp.habilidades.name }}" checked>
+                                                        <label class="form-check-label" for="HabilidadCheck{{ forloop.counter }}" >
+                                                            {{ h }}: {{ h.descripcion }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mt-3">
+                                            <label class="form-label px-2" style="font-size: 20px">Listado de Tareas</label>
+                                            <a style="border-style: none" type="button" data-bs-toggle="offcanvas" data-bs-target="#CanvasTareas" aria-controls="offcanvasWithBackdrop"><i class="fas fa-plus plus"></i></a>
+
+                                            <div id="listatareas">
+                                                {% for t in request.user.especialista.tareas.all  %}
+                                                    <div id="tarea{{ forloop.counter0 }}" class="form-check my-2">
+                                                        <input class="form-check-input" type="checkbox" value="{{ t.id }}" id="TareaCheck{{ forloop.counter }}" validate_centro='True' name="{{ formEsp.tareas.name }}" checked>
+                                                        <label class="form-check-label" for="TareaCheck{{ forloop.counter }}" >
+                                                            {{ t }}: {{ t.descripcion }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mt-3">
+                                            <label class="form-label px-2" style="font-size: 20px">Listado de Herramientas</label>
+                                            <a style="border-style: none" type="button" data-bs-toggle="offcanvas" data-bs-target="#CanvasHerramientas" aria-controls="offcanvasWithBackdrop"><i class="fas fa-plus plus"></i></a>
+
+                                            <div id="listaherramientas">
+                                                {% for ht in request.user.especialista.herramientas.all  %}
+                                                    <div id="herramienta{{ forloop.counter0 }}" class="form-check my-2">
+                                                        <input class="form-check-input" type="checkbox" value="{{ ht.id }}" id="HerramientaCheck{{ forloop.counter }}" validate_centro='True' name="{{ formEsp.herramientas.name }}" checked>
+                                                        <label class="form-check-label" for="HerramientaCheck{{ forloop.counter }}" >
+                                                            {{ ht }}: {{ ht.descripcion }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 row">
+                                        <div class="col-md-12">
+                                        <label for="centros" class="form-label" style="font-size: 20px">Listado de Centros de Trabajos</label>
+                                        <div {% if lhc > 5 %} class="overflow-scroll-y h-40" {% endif %}>
+                                            {% for ct in centros  %}
+                                                <div class="form-check my-2">
+                                                    <input class="form-check-input" type="checkbox" value="{{ ct.id }}" id="CentroCheck{{ forloop.counter }}" validate_centro='True' name="{{ formEsp.trabajo_antiguos.name }}" {% if ct in request.user.especialista.trabajo_antiguos.all %} checked {% endif %}>
+                                                    <label class="form-check-label" for="CentroCheck{{ forloop.counter }}" >
+                                                        {{ ct }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <input id="{{ formEsp.avatar.label }}" name="{{ formEsp.avatar.name }}" type="file" class="d-none" aria-label="Avatar" accept="image/*" >
+                                    <br/>
+
+                                </div>
+
+                                <div class="d-flex justify-content-center mt-5">
+                                    <div class="d-inline-block w-25">
+                                        <a href="{% url 'home' %}" class="btn btn-danger btn-user btn-block ml-55 mb-3">
+                                            Cacncelar <i class=" mx-2 fas fa-close"></i>
+                                        </a>
+                                    </div>
+                                    <div class="d-inline-block w-25">
+                                        <button type="submit" class="btn btn-primary btn-user btn-block ml-55 mb-3">
+                                            Actualizar <i class=" mx-2 fas fa-save"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- CANVAS CONOCIMIENTOS -->
+                            <div class="offcanvas offcanvas-end" tabindex="-1" id="CanvasConocimientos">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Esocoga sus Conocimientos</h5>
+                                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div id="conocimientos" class="offcanvas-body">
+                                    <input type="text" id="search_conocimientos" class="form-control" onkeyup="search_function('conocimientos')" placeholder="&#128270 Buscar Conocimientos...">
+                                    {% for c in conocimientos  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ c.id }}" id="ConocimientoCheck{{ forloop.counter }}" validate_conocimiento='True' name="{{ formEsp.conocimientos.name }}" {% if c in request.user.especialista.conocimientos.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ c.id_personalizado }}" data-bs-content="{{ c.descripcion }}" for="ConocimientoCheck{{ forloop.counter }}" >
+                                                {{ c.id_personalizado }}: {{ c.descripcion }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                    <div class="d-flex justify-content-center">
+                                        <a id="AceptarConocimientos" class="mt-4 btn btn-success" data-bs-dismiss="offcanvas"> Aceptar </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN CANVAS CONOCIMIENTOS -->
+
+                            <!-- CANVAS HABILIDADES -->
+                            <div class="offcanvas offcanvas-end" tabindex="-1" id="CanvasHabilidades">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Esocoga sus Habilidades</h5>
+                                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div id="habilidades" class="offcanvas-body">
+                                    <input type="text" class="form-control" id="search_habilidades" onkeyup="search_function('habilidades')" placeholder="&#128270 Buscar Habilidades...">
+                                    {% for h in habilidades  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ h.id }}" id="HabilidadCheck{{ forloop.counter }}" validate_conocimiento='True' name="{{ formEsp.habilidades.name }}" {% if h in request.user.especialista.habilidades.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ h.id_personalizado }}" data-bs-content="{{ h.descripcion }}" for="HabilidadCheck{{ forloop.counter }}" >
+                                                {{ h.id_personalizado }}: {{ h.descripcion }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                    <div class="d-flex justify-content-center">
+                                        <a id="AceptarHabilidades" class="mt-4 btn btn-success" data-bs-dismiss="offcanvas"> Aceptar </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN CANVAS HABILIDADES -->
+
+                            <!-- CANVAS TAREAS -->
+                            <div class="offcanvas offcanvas-end" tabindex="-1" id="CanvasTareas">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Esocoga sus Tareas</h5>
+                                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div id="tareas" class="offcanvas-body">
+                                    <input type="text" class="form-control" id="search_tareas" onkeyup="search_function('tareas')" placeholder="&#128270 Buscar Tareas...">
+                                    {% for t in tareas  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ t.id }}" id="TareaCheck{{ forloop.counter }}" validate_conocimiento='True' name="{{ formEsp.tareas.name }}" {% if t in request.user.especialista.tareas.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ t.id_personalizado }}" data-bs-content="{{ t.descripcion }}" for="TareaCheck{{ forloop.counter }}" >
+                                                {{ t.id_personalizado }}: {{ t.descripcion }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                    <div class="d-flex justify-content-center">
+                                        <a id="AceptarTareas" class="mt-4 btn btn-success" data-bs-dismiss="offcanvas"> Aceptar </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN CANVAS TAREAS -->
+
+                            <!-- CANVAS HERRAMIENTAS -->
+                            <div class="offcanvas offcanvas-end" tabindex="-1" id="CanvasHerramientas">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Esocoga sus Herramientas</h5>
+                                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div id="herramientas" class="offcanvas-body">
+                                    <input type="text" class="form-control" id="search_herramientas" onkeyup="search_function('herramientas')" placeholder="&#128270 Buscar Herramientas...">
+                                    {% for ht in herramientas  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ ht.id }}" id="HerramientaCheck{{ forloop.counter }}" validate_conocimiento='True' name="{{ formEsp.herramientas.name }}" {% if ht in request.user.especialista.herramientas.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ ht.id_personalizado }}" data-bs-content="{{ ht.descripcion }}" for="HerramientaCheck{{ forloop.counter }}" >
+                                                {{ ht.id_personalizado }}: {{ ht.descripcion }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                    <div class="d-flex justify-content-center">
+                                        <a id="AceptarHerramientas" class="mt-4 btn btn-success" data-bs-dismiss="offcanvas"> Aceptar </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN CANVAS HERRAMIENTAS -->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

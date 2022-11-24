@@ -1,0 +1,210 @@
+{% extends "Sistema/Rol_Trabajo/roltrabajo-add.html" %}
+{% load static %}
+
+{% block subtitle %}
+    <i>{{ rt.id_personalizado.upper }}</i>"
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            <div class="m-0 row justify-content-center border-3 border-primary">
+                                <div class="text-center">
+                                    <h2 class="mt-3">Reporte de Calificación para el Rol <i>{{ rt.id_personalizado }}</i></h2>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <canvas  id="myChart"></canvas>
+                                </div>
+                                <div class="text-center col-md-12 mt-3">
+                                    <h4 class="m-4">Resúmen de evaluación</h4>
+                                    <table class="table table-dark table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Competencias</th>
+                                            <th scope="col">Cantidad Necesaria Total</th>
+                                            <th scope="col">Cantidad Satisfecha</th>
+                                            <th scope="col">% Satisfecho</th>
+                                            <th scope="col">Cantidad Faltante</th>
+                                            <th scope="col">% Faltante</th>
+                                            <th scope="col">Calificación</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row">Conocimientos</th>
+                                            <td>{{ estadisticas.conocimientos.total }}</td>
+                                            <td>{{ estadisticas.conocimientos.total_cubierto }}</td>
+                                            <td>{{ estadisticas.conocimientos.promedio_cubierto }}</td>
+                                            <td>{{ estadisticas.conocimientos.total_faltante }}</td>
+                                            <td>{{ estadisticas.conocimientos.promedio_faltante }}</td>
+                                            <td>{{ estadisticas.conocimientos.calificacion }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Habilidades</th>
+                                            <td>{{ estadisticas.habilidades.total }}</td>
+                                            <td>{{ estadisticas.habilidades.total_cubierto }}</td>
+                                            <td>{{ estadisticas.habilidades.promedio_cubierto }}</td>
+                                            <td>{{ estadisticas.habilidades.total_faltante }}</td>
+                                            <td>{{ estadisticas.habilidades.promedio_faltante }}</td>
+                                            <td>{{ estadisticas.habilidades.calificacion }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="">Tareas</th>
+                                            <td>{{ estadisticas.tareas.total }}</td>
+                                            <td>{{ estadisticas.tareas.total_cubierto }}</td>
+                                            <td>{{ estadisticas.tareas.promedio_cubierto }}</td>
+                                            <td>{{ estadisticas.tareas.total_faltante }}</td>
+                                            <td>{{ estadisticas.tareas.promedio_faltante }}</td>
+                                            <td>{{ estadisticas.tareas.calificacion }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Herramientas</th>
+                                            <td>{{ estadisticas.herramientas.total }}</td>
+                                            <td>{{ estadisticas.herramientas.total_cubierto }}</td>
+                                            <td>{{ estadisticas.herramientas.promedio_cubierto }}</td>
+                                            <td>{{ estadisticas.herramientas.total_faltante }}</td>
+                                            <td>{{ estadisticas.herramientas.promedio_faltante }}</td>
+                                            <td>{{ estadisticas.herramientas.calificacion }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center col-md-10 mt-3">
+                                    <h4 class="m-4">Competencias por Aprender</h4>
+                                    <table class="table table-dark table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Conocimientos</th>
+                                                <th scope="col">Habilidades</th>
+                                                <th scope="col">Tareas</th>
+                                                <th scope="col">Herramientas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td scope="row">
+                                                    {% if estadisticas.conocimientos.faltantes %}
+                                                        {% for a in estadisticas.conocimientos.faltantes %}
+                                                            <ul>
+                                                                <a href="{% url 'conocimiento_list' %}" style="text-decoration: none; color: white">{{ a }}</a>
+                                                            </ul>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        Nada que aprender
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if estadisticas.habilidades.faltantes %}
+                                                        {% for a in estadisticas.habilidades.faltantes %}
+                                                            <ul>
+                                                                <a href="{% url 'habilidad_list' %}" style="text-decoration: none; color: white">{{ a }}</a>
+                                                            </ul>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        Nada que aprender
+                                                    {% endif %}
+
+                                                </td>
+                                                <td>
+                                                    {% if estadisticas.tareas.faltantes %}
+                                                        {% for a in estadisticas.tareas.faltantes %}
+                                                            <ul>
+                                                                <a href="{% url 'tarea_list' %}" style="text-decoration: none; color: white">{{ a }}</a>
+                                                            </ul>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        Nada que aprender
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if estadisticas.herramientas.faltantes %}
+                                                        {% for a in estadisticas.herramientas.faltantes %}
+                                                            <ul>
+                                                                <a href="{% url 'herramienta_list' %}" style="text-decoration: none; color: white">{{ a }}</a>
+                                                            </ul>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        Nada que aprender
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static '/Sistema/vendor/Charts/Chart.min.js' %}"></script>
+
+    <script>
+        let myChart = document.getElementById('myChart').getContext('2d');
+        console.log(myChart)
+
+        //Global Properties
+        Chart.defaults.font.family = 'TimesNewRoman';
+        Chart.defaults.font.size = 14;
+
+        let massPopChart = new Chart(myChart,{
+            type: 'bar',
+            data: {
+                labels:['Conocimientos', 'Habilidades', 'Tareas', 'Herramientas'],
+                datasets:[
+                    {
+                        label: 'Tú',
+                        data:[
+                            {{estadisticas.conocimientos.total_cubierto}},
+                            {{estadisticas.habilidades.total_cubierto}},
+                            {{estadisticas.tareas.total_cubierto}},
+                            {{estadisticas.herramientas.total_cubierto}}
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                        ],
+                        hoverBorderWidth: 2,
+                        hoverBorderColor: '#000000',
+                    },
+                    {
+                        label: 'Total',
+                        data:[
+                            {{estadisticas.conocimientos.total}},
+                            {{estadisticas.habilidades.total}},
+                            {{estadisticas.tareas.total}},
+                            {{estadisticas.herramientas.total}}
+                        ],
+                        hoverBorderWidth: 2,
+                        hoverBorderColor: '#000000',
+                    }]
+            },
+            options:{
+                title:{
+                    text: 'dddddddd',
+                    fontsize: 28
+                },
+                legend:{
+                    position: 'right'
+                },
+            }
+        });
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "Sistema/Rol_Trabajo/roltrabajo-add.html" %}
+{% load static %}
+
+{% block subtitle %}
+    Editar "<i>{{ rt.id_personalizado.upper }}</i>"
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+        <div class="card o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="shadow-lg py-2">
+                    <div class="px-5">
+                        <form class="row g-5 needs-validation" novalidate action="../edit_rol_trabajo/{{ rt.id }}" method="post" id="roltrabajo-edit"> {% csrf_token %}
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="nombre" name="{{ form.nombre.name }}" placeholder="" value="{{ rt.nombre }}" required>
+                                    <label for="nombre" class="form-label">Nombre</label>
+                                    <div class="invalid-feedback">
+                                      Por favor introduzca un nombre válido
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="areaespecialidad" required name="{{ form.area_especialidad.name }}">
+                                        <option selected disabled value="">Seleccionar...</option>
+                                        {% for ae in areasespecialidades  %}
+                                            <option {% if ae == rt.area_especialidad %} selected {% endif %} value="{{ ae.id }}">{{ ae }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="areaespecialidad" class="form-label">Área de Especialidad</label>
+                                    <div class="invalid-tooltip">
+                                        Por favor seleccione un área de especialidad válido
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <textarea type="text" class="form-control" id="descripcion" name="{{ form.descripcion.name }}" style="height: 100px" required placeholder="">{{ rt.descripcion }}</textarea>
+                                    <label for="descripcion" class="form-label">Descripcion</label>
+                                    <div class="invalid-tooltip">
+                                        Por favor introduzca una descripción válida
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" style="font-size: 20px">Listado de Conocimientos</label>
+                                <div class="form-check mt-1 mb-3" style="font-size: 1rem">
+                                    <label for="allknowledge"> Seleccionar Todas</label>
+                                    <input class="form-check-input" id="allknowledge" type="checkbox">
+                                </div>
+                                <input id="search_conocimientos" type="text" class="form-control mb-2" onkeyup="search_function('conocimientos')" placeholder="&#128270 Buscar Conocimientos... ">
+                                <div id="conocimientos" {% if lc > 6 %} class="overflow-scroll-y h-50" {% endif %}>
+                                    {% for c in conocimientos  %}
+                                    <div class="form-check my-2">
+                                        <input class="form-check-input" type="checkbox" value="{{ c.id }}" id="ConocimientoCheck{{ forloop.counter }}" validate_conocimiento='True' name="{{ form.conocimientos.name }}" {% if c in rt.conocimientos.all %} checked {% endif %}>
+                                        <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ c.id_personalizado }}" data-bs-content="{{ c.descripcion }}" for="ConocimientoCheck{{ forloop.counter }}" >
+                                            {{ c }}: {{ c.descripcion }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="habilidades" class="form-label" style="font-size: 20px">Listado de Habilidades</label>
+                                <div class="form-check mt-1 mb-3" style="font-size: 1rem">
+                                    <label for="allskills"> Seleccionar Todas</label>
+                                    <input class="form-check-input" id="allskills" type="checkbox">
+                                </div>
+                                <input id="search_habilidades" type="text" class="form-control mb-2" onkeyup="search_function('habilidades')" placeholder="&#128270 Buscar Habilidades... ">
+                                <div id="habilidades" {% if lh > 6 %} class="overflow-scroll-y h-50" {% endif %}>
+                                    {% for h in habilidades  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ h.id }}" id="HabilidadCheck{{ forloop.counter }}" validate_habilidad='True' name="{{ form.habilidades.name }}" {% if h in rt.habilidades.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ h.id_personalizado }}" data-bs-content="{{ h.descripcion }}" for="HabilidadCheck{{ forloop.counter }}" >
+                                                {{ h }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor introduzca una descripción válida
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="tareas" class="form-label" style="font-size: 20px">Listado de Tareas </label>
+                                <div class="form-check mt-1 mb-3" style="font-size: 1rem">
+                                    <label for="alltasks"> Seleccionar Todas</label>
+                                    <input class="form-check-input" id="alltasks" type="checkbox">
+                                </div>
+                                <input id="search_tareas" type="text" class="form-control mb-2" onkeyup="search_function('tareas')" placeholder="&#128270 Buscar Tareas... ">
+                                <div id="tareas" {% if lt > 6 %} class="overflow-scroll-y h-50" {% endif %}>
+                                    {% for t in tareas  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ t.id }}" id="TareaCheck{{ forloop.counter }}" validate_tarea='True' name="{{ form.tareas.name }}" {% if t in rt.tareas.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ t.id_personalizado }}" data-bs-content="{{ t.descripcion }}" for="TareaCheck{{ forloop.counter }}" >
+                                                {{ t }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="herramientas" class="form-label" style="font-size: 20px">Listad de Herramientas</label>
+                                <div class="form-check mt-1 mb-3" style="font-size: 1rem">
+                                    <label for="alltools"> Seleccionar Todas</label>
+                                    <input class="form-check-input" id="alltools" type="checkbox">
+                                </div>
+                                <input id="search_herramientas" type="text" class="form-control mb-2" onkeyup="search_function('herramientas')" placeholder="&#128270 Buscar Herramientas... ">
+                                <div id="herramientas" {% if lht > 6 %} class="overflow-scroll-y h-50" {% endif %}>
+                                    {% for ht in herramientas  %}
+                                        <div class="form-check my-2">
+                                            <input class="form-check-input" type="checkbox" value="{{ ht.id }}" id="HerramientaCheck{{ forloop.counter }}" validate_herramienta='True' name="{{ form.herramientas.name }}" {% if ht in rt.herramientas.all %} checked {% endif %}>
+                                            <label class="form-check-label" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ ht.id_personalizado }}" data-bs-content="{{ ht.descripcion }}" for="HerramientaCheck{{ forloop.counter }}" >
+                                                {{ ht }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="mt-3"></p>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Editar <i class="fas fa-save"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+{% endblock %}

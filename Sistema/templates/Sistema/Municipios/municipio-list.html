@@ -1,0 +1,111 @@
+{% extends "Sistema/Municipios/municipio-add.html" %}
+{% load static %}
+
+
+{% block subtitle %}
+    Ver
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            <a class="btn btn-primary mb-3 text-capitalize" href="{% url 'municipio_add' %}"> <i class="fas fa-plus"></i> Añadir Nuevo Municipio</a>
+                            <table id="datatablesSimple" class="bg-light-dark">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" >#</th>
+                                    <th class="text-center" >NOMBRE</th>
+                                    <th class="text-center" >PROVINCIA</th>
+                                    <th class="text-center">EDITAR</th>
+                                    <th class="text-center">ELIMINAR</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for m in municipios%}
+                                    <tr class="text-center">
+                                        <td class="id">
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ m.nombre }}
+                                        </td>
+                                        <td>
+                                            {{ m.provincia }}
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-success btn-raised btn-xs editar" data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <form onsubmit="return confirmar({{ m.id }},'delete_municipio/', 'Municipio')">
+                                                <button type="submit" class="btn btn-danger btn-raised btn-xs btn-delete">
+                                                    <i class="fas fa-close"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# MODAL DE EDITAR #}
+                            {% for m in municipios %}
+                                <div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="ModalLabel">Editando...</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="row g-5 needs-validation" novalidate action="/update_municipio/{{ m.id }}" method="POST"> {% csrf_token %}
+                                                    <div class="col-md-6">
+                                                        <div class="form-floating">
+                                                            <input id="descripcion" name="{{ form.nombre.name }}" class="form-control" maxlength="350" required placeholder="" value="{{ m.nombre }}">
+                                                            <label for="descripcion" class="control-label">Nombre</label>
+                                                            <div class="invalid-tooltip">
+                                                                Por favor introduzca un nombre válido
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-floating position-relative">
+                                                            <select class="form-select" id="categoria" required name="{{ form.provincia.name }}">
+                                                                <option selected disabled value="">Seleccionar...</option>
+                                                                {% for p in provincias  %}
+                                                                    <option {% if m.provincia == p %} selected {% endif %} value="{{ p.id }}">{{ p }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <label for="categoria" class="form-label">Provincia *</label>
+                                                            <div class="invalid-tooltip">
+                                                                Por favor seleccione una categoría
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 text-center">
+                                                        <button class="btn btn-primary" type="submit">Editar &nbsp;<i class="fas fa-save"></i></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,158 @@
+{% extends "Sistema/Rol_Trabajo/roltrabajo-add.html" %}
+{% load static %}
+
+{% block subtitle %}
+    "<i>{{ rt.id_personalizado.upper }}</i>"
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5 w-100 h-100">
+                            <div class="card-header py-3">
+                                <h5 class="m-0 font-weight-bold"><b>Nombre:</b> <i>{{ rt.nombre}}</i></h5>
+                                <br>
+                                <h5 class="m-0 font-weight-bold"><b>ID:</b> <i>{{ rt.id_personalizado}}</i></h5>
+                                <br>
+                                <h5 class="m-0 ont-weight-bold"><b>Área de Especialidad:</b> <i>{{ rt.area_especialidad}}</i></h5>
+                                <br>
+                                <h5 class="m-0 "><b>Descripcion:</b> <i>{{ rt.descripcion }}</i></h5>
+                            </div>
+                            <div class="mt-4">
+                                <form action="{% url 'especialista_evaluar' rt.id %}" method="post">
+                                    {% csrf_token %}
+                                    <div>
+                                        <button type="submit" class="btn btn-success">Aplicar para este Rol de Trabajo</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-body">
+                                <div class="bg-white card-header">
+                                    <div class="row">
+                                        <div class="my-3 col-md-12">
+                                            <h5><b>Listado de Conocimientos:</b></h5>
+                                            <div style="height: 350px" >
+                                                <table id="datatablesSimple" class="bg-light-dark">
+                                                    <thead>
+                                                    <tr class="">
+                                                        <th class="text-center">ID</th>
+                                                        <th class="text-center">DESCRIPCIÓN</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for c in rt.conocimientos.all%}
+                                                        <tr class="">
+                                                            <td class="align-middle text-center">
+                                                                {{ c.id_personalizado }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                {{ c.descripcion }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                        <div class="my-3 col-md-12">
+                                            <h5><b>Listado de Habilidades:</b></h5>
+                                            <div style="height: 350px" >
+                                                <table id="datatablesSimple" class="bg-light-dark">
+                                                    <thead>
+                                                    <tr class="">
+                                                        <th class="text-center">ID</th>
+                                                        <th class="text-center">DESCRIPCIÓN</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for h in rt.habilidades.all%}
+                                                        <tr class="">
+                                                            <td class="align-middle text-center">
+                                                                {{ h.id_personalizado }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                {{ h.descripcion }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                        <div class="my-3 col-md-12">
+                                            <h5><b>Listado de Tareas:</b></h5>
+                                            <div style="height: 350px" >
+                                                <table id="datatablesSimple" class="bg-light-dark">
+                                                    <thead>
+                                                    <tr class="">
+                                                        <th class="text-center">ID</th>
+                                                        <th class="text-center">DESCRIPCIÓN</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for t in rt.tareas.all%}
+                                                        <tr class="">
+                                                            <td class="align-middle text-center">
+                                                                {{ t.id_personalizado }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                {{ t.descripcion }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                        <div class="my-3 col-md-12">
+                                            <h5><b>Listado de Herramientas:</b></h5>
+                                            <div style="height: 350px" >
+                                                <table id="datatablesSimple" class="bg-light-dark">
+                                                    <thead>
+                                                    <tr class="">
+                                                        <th class="text-center">ID</th>
+                                                        <th class="text-center">DESCRIPCIÓN</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for ht in rt.herramientas.all%}
+                                                        <tr class="">
+                                                            <td class="align-middle text-center">
+                                                                {{ ht.id_personalizado }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                {{ ht.descripcion }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form action="{% url 'especialista_evaluar' rt.id %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success">Aplicar para este Rol de Trabajo</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "Sistema/Administracion_Usuarios/especialista-user-add.html" %}
+{% load static %}
+
+
+{% block subtitle %}
+    Ver
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            <a class="btn btn-primary mb-3" href="{% url 'especialista_add' %}"> <i class="fas fa-plus"></i> Añadir Nuevo Especialista</a>
+                            <table id="datatablesSimple" class="bg-light-dark">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Online</th>
+                                        <th class="text-center">Último Acceso</th>
+                                        <th class="text-center">ELIMINAR</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    {% for e in especialistas%}
+                                        <tr class="text-center">
+                                            <td class="text-uppercase">
+                                                {{ e.id }}
+                                            </td>
+                                            <td>
+                                                {{ e.username }}
+                                            </td>
+                                            <td>
+                                                {% if e.especialista.is_online %}
+                                                    <a style="color: green"><i class="fas fa-circle"></i></a>
+                                                {% else %}
+                                                    <a style="color:red;"><i class="fas fa-circle"></i></a>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if e.last_login == None %}
+                                                    Aún no ha iniciado sesión
+                                                {% else %}
+                                                    {{ e.last_login }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <form onsubmit="return confirmar({{ e.id }},'delete_especialista/', 'Especialista')">
+                                                    <button type="submit" class="btn btn-danger btn-raised btn-xs btn-delete">
+                                                        <i class="fas fa-close"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+
+
+

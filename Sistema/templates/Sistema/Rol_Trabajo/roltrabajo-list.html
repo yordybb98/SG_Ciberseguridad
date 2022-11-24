@@ -1,0 +1,79 @@
+{% extends "Sistema/Rol_Trabajo/roltrabajo-add.html" %}
+{% load static %}
+
+
+{% block subtitle %}
+    Ver
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            {% if perms.Sistema.add_roltrabajo %}
+                            <a class="btn btn-primary mb-3" href="{% url 'rol_trabajo_add' %}"> <i class="fas fa-plus"></i> Añadir Nuevo Rol de Trabajo</a>
+                            {% endif %}
+                            <table id="datatablesSimple" class="bg-light-dark">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Area Especialidad</th>
+                                        <th class="text-center">VER</th>
+                                        {% if perms.Sistema.change_roltrabajo %}
+                                        <th class="text-center">EDITAR</th>
+                                        {% endif %}
+                                        {% if perms.Sistema.delete_roltrabajo %}
+                                        <th class="text-center">ELIMINAR</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    {% for rt in rolestrabajos%}
+                                        <tr class="text-center">
+                                            <td class="text-uppercase">
+                                                {{ rt.id_personalizado }}
+                                            </td>
+                                            <td>
+                                                {{ rt.nombre }}
+                                            </td>
+                                            <td>
+                                                {{ rt.area_especialidad.nombre }}
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-primary mb-3" href="rol_trabajo/{{ rt.id }}"> <i class="far fa-eye"></i> </a>
+                                            </td>
+                                            {% if perms.Sistema.change_roltrabajo %}
+                                            <td>
+                                                <a class="btn btn-success mb-3" href="edit_rol_trabajo/{{ rt.id }}"><i class="far fa-edit"></i></a>
+                                            </td>
+                                            {% endif %}
+                                            {% if perms.Sistema.delete_roltrabajo %}
+                                            <td>
+                                                <form onsubmit="return confirmar({{ rt.id }},'delete_rol_trabajo/', 'Rol de Trabajo')">
+                                                    <button type="submit" class="btn btn-danger btn-raised btn-xs btn-delete">
+                                                        <i class="fas fa-close"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+
+
+

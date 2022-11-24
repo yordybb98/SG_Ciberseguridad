@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>{% block title %}Dashboard - SB Admin{% endblock %}</title>
+    <link href="{% static '/Sistema/css/normalice.css' %}" rel="stylesheet" />
+    <link href="{% static '/Sistema/css/styles.css' %}" rel="stylesheet" />
+    <link href="{% static '/Sistema/assets/icons/ico.png' %}" rel="icon" />
+    <script src="{% static '/Sistema/vendor/FontAwesome6.1/js/all.js' %}"></script>
+</head>
+<body class="sb-nav-fixed sb-sidenav-toggled">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-4 text-uppercase" href="{% url 'home' %}">SGC Ciberseguridad</a>
+
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <div style="width: 80%">
+        {% block navbar %}
+        {% endblock %}
+    </div>
+    <div class="row justify-content-center" style="width: 15%">
+        <div class="col-auto">
+            <h5 id="HoraActual" style="color:white;"></h5>
+        </div>
+    </div>
+</nav>
+
+<div id="layoutSidenav">
+
+    <!-- Sidebar -->
+    <div id="layoutSidenav_nav">
+
+        <div id="sidenav-cover" class="sb-sidenav cover">
+
+            <nav class="sb-sidenav accordion sb-sidenav-dark cover" id="sidenavAccordion">
+
+                <div class="sb-sidenav-menu pb-5">
+                    <!-- User Infor -->
+                    <div class="full-box dashboard-sideBar-UserInfo mt-2 border-b">
+                        <figure class="full-box">
+                            <img src="{{ request.user.especialista.avatar.url }}" alt="UserIcon">
+                            <figcaption class="text-center text-titles pt-1 text-uppercase mt-2"> Bienvenido {{ user }}</figcaption>
+                        </figure>
+                        <ul class="full-box list-unstyled text-center">
+                            <li>
+                                <a href="{% url 'act_info' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mis datos">
+                                    <i class="fas fa-cog"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'cambiar_contraseña' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cambiar Contraseña">
+                                    <i class="fas fa-key"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="exit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Salir del sistema">
+                                    <i class="fas fa-sign-out"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Menu Sidebar -->
+                    <div class="nav">
+                        <a class="nav-link mt-2" href="{% url 'home' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                            Bienvenido
+                        </a>
+
+
+
+                        <div class="sb-sidenav-menu-heading border-b">Administración</div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategoria" aria-expanded="false" aria-controls="collapseCategoria">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list-alt"></i></div>
+                            Categorías
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseCategoria" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_categoria %}
+                                <a class="nav-link" href="{% url 'categoria_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'categoria_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseArea_de_Especialidad" aria-expanded="false" aria-controls="collapseArea_de_Especialidad">
+                            <div class="sb-nav-link-icon"><i class="fas fa-gavel"></i></div>
+                            Área de Especialidad
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseArea_de_Especialidad" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_areaespecialidad %}
+                                <a class="nav-link" href="{% url 'area_especialidad_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'area_especialidad_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseConocimientos" aria-expanded="false" aria-controls="collapseConocimientos">
+                            <div class="sb-nav-link-icon"><i class="fas fa-brain"></i></div>
+                            Conocimientos
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseConocimientos" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_conocimiento %}
+                                <a class="nav-link" href="{% url 'conocimiento_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'conocimiento_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseHabilidades" aria-expanded="false" aria-controls="collapseHabilidades">
+                            <div class="sb-nav-link-icon"><i class="fas fa-graduation-cap"></i></div>
+                            Habilidades
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseHabilidades" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_habilidad %}
+                                <a class="nav-link" href="{% url 'habilidad_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'habilidad_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTareas" aria-expanded="false" aria-controls="collapseTareas">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
+                            Tareas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseTareas" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_tarea %}
+                                <a class="nav-link" href="{% url 'tarea_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'tarea_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseHerramientas" aria-expanded="false" aria-controls="collapseHerramientas">
+                            <div class="sb-nav-link-icon"><i class="fas fa-wrench"></i></div>
+                            Herramientas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseHerramientas" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_herramienta %}
+                                <a class="nav-link" href="{% url 'herramienta_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'herramienta_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRol_Trabajo" aria-expanded="false" aria-controls="collapseRol_Trabajo">
+                            <div class="sb-nav-link-icon"><i class="fas fa-gears"></i></div>
+                            Rol de Trabajo
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseRol_Trabajo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {% if perms.Sistema.add_roltrabajo %}
+                                <a class="nav-link" href="{% url 'rol_trabajo_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                {% endif %}
+                                <a class="nav-link" href="{% url 'rol_trabajo_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        {% if request.user.is_staff %}
+                        <div class="sb-sidenav-menu-heading border-b">Nomencladores</div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCentros_Trabajos" aria-expanded="false" aria-controls="collapseCentros_Trabajos">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
+                            Centros de Trabajos
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseCentros_Trabajos" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'centro_trabajo_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                <a class="nav-link" href="{% url 'centro_trabajo_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGéneros" aria-expanded="false" aria-controls="collapseGéneros">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
+                            Géneros
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseGéneros" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'genero_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                <a class="nav-link" href="{% url 'genero_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProvincias" aria-expanded="false" aria-controls="collapseProvincias">
+                            <div class="sb-nav-link-icon"><i class="fas fa-city"></i></div>
+                            Provincias
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseProvincias" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'provincia_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                <a class="nav-link" href="{% url 'provincia_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMunicipios" aria-expanded="false" aria-controls="collapseMunicipios">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
+                            Municipios
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseMunicipios" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'municipio_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                <a class="nav-link" href="{% url 'municipio_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+
+                        <div class="sb-sidenav-menu-heading border-b">Usuarios</div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAdminsitradores" aria-expanded="false" aria-controls="collapseAdminsitradores">
+                            <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
+                            Administradores
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseAdminsitradores" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'admin_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                <a class="nav-link" href="{% url 'admin_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseEspecialistas" aria-expanded="false" aria-controls="collapseEspecialistas">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-secret"></i></div>
+                            Especialistas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseEspecialistas" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'especialista_add' %}"><i class="fas fa-plus m-2"></i>Añadir</a>
+                                <a class="nav-link" href="{% url 'especialista_list' %}"><i class="fas fa-eye m-2"></i> Ver</a>
+                            </nav>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="w-100 bg-light-dark text-center">
+                    Universidad de las Ciencias Informáticas
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Content -->
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<!--Toast -->
+{% if messages %}
+    <div class="toast-container position-absolute top-5 end-0 p-3">
+        {% for message in messages %}
+            <div class="toast {% if message.tags == 'error' %} bg-danger text-white {% elif message.tags == 'success' %} bg-success text-white {% elif message.tags == 'info' %} bg-info text-black {% elif message.tags == 'warning' %} bg-warning text-black {% endif %}" id="liveToast_{{ forloop.counter0 }}" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="{% if message.tags == 'error' %} {% static 'Sistema/assets/icons/error.png' %} {% elif message.tags == 'success' %} {% static 'Sistema/assets/icons/success.png' %} {% elif message.tags == 'info' %} {% static 'Sistema/assets/icons/info.webp' %} {% elif message.tags == 'warning' %} {% static 'Sistema/assets/icons/warning.png' %} {% endif %}" class="rounded me-2" alt="..." width="50">
+                    <strong class="me-auto">{% if message.tags == 'error' %} ERROR!!! {% elif message.tags == 'success' %} COMPLETADO {% elif message.tags == 'info' %} NOTIFICACIÓN {% elif message.tags == 'warning' %} ATENCIÓN {% endif %}</strong>
+                    <small class="text-muted"></small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+<script src="{% static '/Sistema/vendor/JQuery3.6/js/jquery-3.6.0.js' %}"></script>
+<script src="{% static '/Sistema/vendor/Bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static '/Sistema/vendor/Charts/Chart.min.js' %}"></script>
+<script src="{% static '/Sistema/vendor/SimpleDatatables/js/simple-datatables@latest' %}"></script>
+<script src="{% static '/Sistema/js/datatables-simple-demo.js' %}"></script>
+<script src="{% static '/Sistema/vendor/SweetAlert2/swa2.js' %}"></script>
+<script src="{% static '/Sistema/js/scripts.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            (new bootstrap.Toast(document.getElementById('liveToast_{{ forloop.counter0 }}'))).show();
+        {% endfor %}
+    {% endif %}
+</script>
+
+
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

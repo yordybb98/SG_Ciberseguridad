@@ -1,0 +1,94 @@
+{% extends "Sistema/Centros_Trabajos/centrotrabajo-add.html" %}
+{% load static %}
+
+
+{% block subtitle %}
+    Ver
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            <a class="btn btn-primary mb-3 text-capitalize" href="{% url 'centro_trabajo_add' %}"> <i class="fas fa-plus"></i> Añadir Nuevo Centro de Trabajo</a>
+                            <table id="datatablesSimple" class="bg-light-dark">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" >#</th>
+                                        <th class="text-center" >NOMBRE</th>
+                                        <th class="text-center">EDITAR</th>
+                                        <th class="text-center">ELIMINAR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ct in centrostrabajos%}
+                                        <tr class="text-center">
+                                            <td class="id">
+                                                {{ forloop.counter }}
+                                            </td>
+                                            <td>
+                                                {{ ct.nombre }}
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-success btn-raised btn-xs editar" data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <form onsubmit="return confirmar({{ ct.id }},'delete_centro_trabajo/', 'Centro de Trabajo')">
+                                                    <button type="submit" class="btn btn-danger btn-raised btn-xs btn-delete">
+                                                        <i class="fas fa-close"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        {# MODAL DE EDITAR #}
+                                        <div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="ModalLabel">Editando...</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/update_centro_trabajo/{{ ct.id }}" method="POST"> {% csrf_token %}
+                                                            <fieldset>
+                                                                <div class="container-fluid">
+                                                                    <div class="row g-4">
+                                                                        <div class="col-xs-12">
+                                                                            <div class="form-floating">
+                                                                                <input id="nombre" name="{{ form.nombre.name }}" class="form-control" maxlength="350" value="{{ ct.nombre }}" placeholder="">
+                                                                                <label for="nombre" class="control-label">Nombre</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <p class="text-center" style="margin-top: 20px;">
+                                                                <button type="submit" class="btn btn-primary btn-raised btn-sm"><i class="fas fa-save"></i> Guardar</button>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,104 @@
+{% extends "Sistema/Conocimiento/conocimiento-add.html" %}
+{% load static %}
+
+
+{% block subtitle %}
+    Ver
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            {% if perms.Sistema.add_conocimiento %}
+                            <a class="btn btn-primary mb-3 text-capitalize" href="{% url 'conocimiento_add' %}"> <i class="fas fa-plus"></i> Añadir Nuevo Conocimiento</a>
+                            {% endif %}
+                            <table id="datatablesSimple" class="bg-light-dark">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">DESCRIPCIÓN</th>
+                                        {% if perms.Sistema.change_conocimiento %}
+                                        <th class="text-center">EDITAR</th>
+                                        {% endif %}
+                                        {% if perms.Sistema.delete_conocimiento %}
+                                        <th class="text-center">ELIMINAR</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for c in conocimientos%}
+                                        <tr class="text-center">
+                                            <td class="id">
+                                                {{ c.id_personalizado }}
+                                            </td>
+                                            <td>
+                                                {{ c.descripcion }}
+                                            </td>
+                                            {% if perms.Sistema.change_conocimiento %}
+                                            <td>
+                                                <button type="submit" class="btn btn-success btn-raised btn-xs editar" data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            {% endif %}
+                                            {% if perms.Sistema.delete_conocimiento %}
+                                            <td>
+                                                <form onsubmit="return confirmar({{ c.id }},'delete_conocimiento/', 'Conocimiento')">
+                                                    <button type="submit" class="btn btn-danger btn-raised btn-xs btn-delete">
+                                                        <i class="fas fa-close"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+
+                                        {# MODAL DE EDITAR #}
+                                        <div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="ModalLabel">Editando...</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/update_conocimiento/{{ c.id }}" method="POST"> {% csrf_token %}
+                                                            <fieldset>
+                                                                <div class="container-fluid">
+                                                                    <div class="row g-4">
+                                                                        <div class="col-xs-12">
+                                                                            <div class="form-group label-floating">
+                                                                                <label for="descripcion" class="control-label">Descripción</label>
+                                                                                <textarea id="descripcion" name="{{ form.descripcion.name }}" class="form-control" rows="2" maxlength="350">{{ c.descripcion }}</textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <p class="text-center" style="margin-top: 20px;">
+                                                                <button type="submit" class="btn btn-primary btn-raised btn-sm"><i class="fas fa-save"></i> Guardar</button>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+
+
+

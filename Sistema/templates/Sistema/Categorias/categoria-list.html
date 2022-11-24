@@ -1,0 +1,121 @@
+{% extends "Sistema/Categorias/categoria-add.html" %}
+{% load static %}
+
+
+{% block subtitle %}
+    Ver
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+            <div class="card o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="shadow-lg py-2">
+                        <div class="px-5">
+                            {% if perms.Sistema.add_categoria %}
+                            <a class="btn btn-primary mb-3 text-capitalize" href="{% url 'categoria_add' %}"> <i class="fas fa-plus"></i> Añadir Nueva Categoría</a>
+                            {% endif %}
+                            <table id="datatablesSimple" class="bg-light-dark">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">NOMBRE</th>
+                                        <th class="text-center">ABREVIATURA</th>
+                                        <th class="text-center">DESCRIPCIÓN</th>
+                                        {% if perms.Sistema.change_categoria %}
+                                        <th class="text-center">EDITAR</th>
+                                        {% endif %}
+                                        {% if perms.Sistema.delete_categoria %}
+                                        <th class="text-center">ELIMINAR</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for c in categorias%}
+                                        <tr class="text-center">
+                                            <td>
+                                                {{ c.nombre }}
+                                            </td>
+                                            <td>
+                                                {{ c.abreviatura.upper }}
+                                            </td>
+                                            <td>
+                                                {% if c.descripcion == None %} Sin Descripción {% else %} {{ c.descripcion }} {% endif %}
+                                            </td>
+                                            {% if perms.Sistema.change_categoria %}
+                                            <td>
+                                                <button type="submit" class="btn btn-success btn-raised btn-xs editar" data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}">
+                                                    <i class="fas fa-edit" style="width: 25px"></i>
+                                                </button>
+                                            </td>
+                                            {% endif %}
+                                            {% if perms.Sistema.delete_categoria %}
+                                            <td>
+                                                <form onsubmit="return confirmar({{ c.id }}, 'delete_categoria/', 'Categoría')">
+                                                    <button type="submit" class="btn btn-danger btn-raised btn-xs btn-delete">
+                                                        <i class="fas fa-close"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+
+                                        {# MODAL DE EDITAR #}
+                                        <div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="ModalLabel">Editando...</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/update_categoria/{{ c.id }}" method="POST"> {% csrf_token %}
+                                                            <fieldset>
+                                                                <div class="container-fluid">
+                                                                    <div class="row g-4">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group label-floating">
+                                                                                <label for="nombre" class="control-label">Nombre de la Categoría *</label>
+                                                                                <input id="nombre" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,150}" class="form-control" type="text" name="{{ form.nombre.name }}" value="{{ c.nombre }}" required="" maxlength="150">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group label-floating">
+                                                                                <label for="abreviatura" class="control-label">Abreviatura * (2 Letras)</label>
+                                                                                <input id="abreviatura" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{2}" class="form-control" type="text" name="{{ form.abreviatura.name }}" value="{{ c.abreviatura }}" required="" maxlength="2">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-12">
+                                                                            <div class="form-group label-floating">
+                                                                                <label for="descripcion" class="control-label">Descripción</label>
+                                                                                <textarea id="descripcion" name="{{ form.descripcion.name }}" class="form-control" rows="2" maxlength="350">{% if c.descripcion == None %}{% else %}{{ c.descripcion }}{% endif %}</textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <div class="text-center mt-2">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+
+
+

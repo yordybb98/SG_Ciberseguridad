@@ -1,0 +1,64 @@
+{% extends 'Sistema/base.html' %}
+{% load static %}
+
+{% block navbar %}
+    <p class="text-white px-3 navbar-title"><i class="fas fa-user"></i> Administración - <small class="text-capitalize">categorías - <small class="text-capitalize">{% block subtitle %}Añadir {% endblock %}</small></small></p>
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+        <div class="card o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="shadow-lg py-2">
+                    <div class="px-5">
+                        <form class="row g-5 needs-validation" novalidate action="{% url 'categoria_add' %}" method="POST"> {% csrf_token %}
+                            <div class="col-md-8">
+                                <div class="form-floating">
+                                    <input id="nombre" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,150}" class="form-control" type="text" name="{{ form.nombre.name }}" required="" maxlength="150" placeholder="Ejemplo">
+                                    <label for="nombre" class="control-label">Nombre de la Categoría *</label>
+                                    <div class="invalid-tooltip">
+                                        Por favor introduzca un nombre válido
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input id="abreviatura" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{2}" class="form-control" type="text" name="{{ form.abreviatura.name }}" required="" maxlength="2" placeholder="AB">
+                                    <label for="abreviatura" class="control-label">Abreviatura *</label>
+                                    <div class="valid-tooltip">
+                                        Correcto!
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                        Por favor introduzca una abreviatura válida (2 letras y/o números)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-floating">
+                                    <textarea id="descripcion" name="{{ form.descripcion.name }}" class="form-control" style="height: 100px" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,350}" maxlength="350" required placeholder="Texto..."></textarea>
+                                    <label for="descripcion" class="control-label">Descripción</label>
+                                    <div class="valid-tooltip">
+                                        Correcto!
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                        Por favor introduzca una descripción válida
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Añadir &nbsp; <i class="fas fa-save"></i></button>
+                            </div>
+				        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>LogIn</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <link rel="stylesheet" href="{% static 'Sistema/css/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'Sistema/vendor/MaterialDesign/css/bootstrap-material-design.min.css' %}">
+        <link href="{% static '/Sistema/assets/icons/ico.png' %}" rel="icon" />
+        <script src="../../static/Sistema/vendor/FontAwesome6.1/js/all.js"></script>
+    </head>
+    <body>
+        <div class="form-global">
+            <div class="form-content">
+                <form action="{% url 'autenticar' %}" method="POST" autocomplete="off" class=" logInForm needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <p class="text-center text-muted" style="color: #009688 !important;"><i class="fas fa-user-circle fa-4x m-2"></i></p>
+                    <p class="text-center text-muted text-uppercase">Inicia sesión con tu cuenta</p>
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="color: #009688" for="UserNameA">Usuario</label>
+                        <input class="form-control" id="UserNameA" name="usuario" type="text" required>
+                        <p class="help-block">Escribe tu nombre de usuario</p>
+                    </div>
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="color: #009688" for="UserPassA">Contraseña</label>
+                        <input class="form-control" id="UserPassA" name="contrasena" type="password" required>
+                        <p class="help-block">Escribe tu contraseña</p>
+                    </div>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div style="color: red">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary" style="color:#6c757d ;" >Iniciar sesión</button>
+                        </div>
+                        <div class="col-md-12 text-center" style="color:#6c757d ;">
+                            <a class="button" style="cursor: pointer"> ¿No tienes Cuenta?, Regístrate!</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-content">
+                <form action="{% url 'autenticacion' %}" method="POST" autocomplete="off" class="logInForm needs-validation" novalidate style="max-width: 500px ">
+                    {% csrf_token %}
+                    <p class="text-center text-muted" style="color: #009688 !important;"><i class="fas fa-user-circle fa-4x m-2"></i></p>
+                    <p class="text-center text-muted text-uppercase">Créate una cuenta nueva</p>
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="color: #009688" for="UserName">Usuario</label>
+                        <input class="form-control" id="UserName" name="{{ form.username.name }}" required type="text">
+                        <div style="color: red">
+                            {{ form.errors.username }}
+                        </div>
+                        <div style="color:rgba(0,0,0,0.4); font-style: italic; font-size: smaller; padding-left: 20px">
+                            {{ form.username.help_text }}
+                        </div>
+                    </div>
+                   <div class="form-group label-floating">
+                        <label class="control-label" style="color: #009688" for="UserPass">Contraseña</label>
+                        <input class="form-control" id="UserPass" name="{{ form.password1.name }}" required type="password">
+                        <div style="color:rgba(0,0,0,0.4); font-style: italic; font-size: smaller">
+                            {{ form.password1.help_text }}
+                        </div>
+                   </div>
+                    <div class="form-group label-floating">
+                        <label class="control-label" style="color: #009688" for="RepUserPass">Repita la Contraseña</label>
+                        <input class="form-control" id="RepUserPass" name="{{ form.password2.name }}" required type="password">
+                        <div style="color: red">
+                            {{ form.errors.password2 }}
+                        </div>
+                        <div style="color:rgba(0,0,0,0.4); font-style: italic; font-size: smaller; padding-left: 20px">
+                            {{ form.password2.help_text }}
+                        </div>
+
+                    </div>
+                    <div class="form-check" style="font-size: 1rem; padding-top: 20px">
+                        <label for="see"> Ver Contraseña</label>
+                        <input class="form-check-input" id="see" type="checkbox">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary" style="color:#6c757d ;" >Crear Cuenta</button>
+                        </div>
+                        <div class="col-md-12 text-center" style="color:#6c757d ;">
+                            <a class="button" style="cursor: pointer"> ¿Ya tienes cuenta? Inicia Sesión</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <h1 id="watermark">Sistema de Gestion de Competencias en Ciberseguridad</h1>
+        </div>
+
+
+        <!--====== Scripts -->
+        <script src="{% static 'Sistema/vendor/JQuery3.6/js/jquery-3.6.0.js' %}"></script>
+        <script src="{% static 'Sistema/js/scripts.js' %}"></script>
+        <script src="{% static 'Sistema/vendor/MaterialDesign/js/material.min.js' %}"></script>
+
+        <script>
+            $.material.init();
+
+            {% if error %}
+                swap(100);
+            {% endif %}
+
+            localStorage.setItem('sb|sidebar-toggle', true);
+        </script>
+    </body>
+</html>

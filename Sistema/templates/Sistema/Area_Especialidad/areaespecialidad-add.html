@@ -1,0 +1,86 @@
+{% extends 'Sistema/base.html' %}
+{% load static %}
+
+{% block navbar %}
+    <p class="text-white px-3 navbar-title"><i class="fas fa-user"></i> Administración - <small class="text-capitalize">Área de Especialidad - <small class="text-capitalize">{% block subtitle %}Añadir {% endblock %}</small></small></p>
+{% endblock %}
+
+{% block content %}
+
+    <div id="layoutSidenav_content">
+        <main id="main" class="cover">
+        <div class="card o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="shadow-lg py-2">
+                    <div class="px-5">
+                        <form class="row g-5 needs-validation" novalidate action="{% url 'area_especialidad_add' %}" method="POST"> {% csrf_token %}
+                            <div class="col-md-8">
+                                <div class="form-floating position-relative">
+                                    <input id="nombre" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,150}" class="form-control" type="text" name="{{ form.nombre.name }}" required="" maxlength="150" placeholder="">
+                                    <label for="nombre" class="form-label">Nombre del Area de Especialidad *</label>
+                                    <div class="valid-tooltip">
+                                          Correcto!
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                      Por favor introduzca un nombre válido
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating position-relative">
+                                    <input id="abreviatura" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{3}" class="form-control" type="text" name="{{ form.abreviatura.name }}" required="" maxlength="3" placeholder="">
+                                    <label for="abreviatura" class="form-label">Abreviatura * </label>
+                                    <div class="valid-tooltip">
+                                          Correcto!
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                      Por favor introduzca una abreviatura válida (3 letras y/o números)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating position-relative">
+                                    <textarea id="descripcion" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{1,350}" name="{{ form.descripcion.name }}" style="height: 100px" class="form-control" rows="2" maxlength="350" required placeholder=""></textarea>
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <div class="valid-tooltip">
+                                        Correcto!
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                        Por favor introduzca una descripción válida
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating position-relative">
+                                    <select class="form-select" id="categoria" required name="{{ form.categoria.name }}">
+                                        <option selected disabled value="">Seleccionar...</option>
+                                        {% for c in categorias  %}
+                                            <option value="{{ c.id }}">{{ c }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="categoria" class="form-label">Categoría *</label>
+                                    <div class="valid-tooltip">
+                                      Correcto!
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                      Por favor seleccione una categoría
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary" type="submit">Añadir &nbsp;<i class="fas fa-save"></i></button>
+                            </div>
+				        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+{% endblock %}
+
+
+
